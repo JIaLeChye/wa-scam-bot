@@ -3,7 +3,7 @@
 [![GitHub](https://img.shields.io/badge/GitHub-JIaLeChye%2Fwa--scam--bot-blue?logo=github)](https://github.com/JIaLeChye/wa-scam-bot)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20.x+-green?logo=node.js)](https://nodejs.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Educational%20NonCommercial-yellow.svg)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/JIaLeChye/wa-scam-bot?style=social)](https://github.com/JIaLeChye/wa-scam-bot/stargazers)
 
 WA Scam Bot is a high-performance automated moderation tool designed to protect WhatsApp communities. By integrating the `@whiskeysockets/baileys` library with a real-time web dashboard, it proactively identifies, flags, and removes malicious scam links to keep your groups safe.
