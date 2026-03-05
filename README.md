@@ -67,6 +67,7 @@ Contributions are what make the open-source community such an amazing place to l
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+
 ## ⚠️ Disclaimer
 
 This project is for educational and automated tooling purposes only. Users are responsible for adhering to WhatsApp's Terms of Service. The developers are not responsible for any account bans or misuse of this tool.
