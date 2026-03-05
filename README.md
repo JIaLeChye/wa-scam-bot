@@ -1,8 +1,8 @@
 # 🛡️ WA Scam Bot
 
-![GitHub package.json version](https://img.shields.io/github/package-json/v/your-username/wa-scam-bot?color=blue)
-![GitHub stars](https://img.shields.io/github/stars/your-username/wa-scam-bot?style=social)
-![GitHub issues](https://img.shields.io/github/issues/your-username/wa-scam-bot)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/JIaLeChye/wa-scam-bot?color=blue)
+![GitHub stars](https://img.shields.io/github/stars/JIaLeChye/wa-scam-bot?style=social)
+![GitHub issues](https://img.shields.io/github/issues/JIaLeChye/wa-scam-bot)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue?logo=typescript)
 ![Node.js](https://img.shields.io/badge/Node.js-20.x+-green?logo=node.js)
 
@@ -33,7 +33,7 @@ Our mission is to create a "set-and-forget" security layer for WhatsApp group ad
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/your-username/wa-scam-bot.git
+git clone https://github.com/JIaLeChye/wa-scam-bot.git
 cd wa-scam-bot
 npm install
 ```
