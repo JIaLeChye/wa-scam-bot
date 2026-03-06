@@ -1,5 +1,5 @@
 import makeWASocket, { useMultiFileAuthState, DisconnectReason, Browsers, fetchLatestBaileysVersion } from '@whiskeysockets/baileys'; // The WA socket library
-import qrcodeTerminal from 'qrcode-terminal'; // Diaplay QR code in terminal
+// import qrcodeTerminal from 'qrcode-terminal'; // Diaplay QR code in terminal
 import express from 'express'; // Web server for dashboard
 import { createServer } from 'http'; // Create HTTP server for Socket.IO  
 import { Server } from 'socket.io'; // Real-time communication with dashboard 
@@ -7,6 +7,29 @@ import QRCode from 'qrcode'; // Generate QR code images for dashboard
 import path from 'path'; // Handle file paths
 import { fileURLToPath } from 'url'; // Get __dirname in ES modules
 import fs from 'fs'; // File system for session management 
+import mongoose, {Mongoose} from 'mongoose'; // MongoDB for logging and analytics 
+
+
+mongoose.connect('mongodb://localhost:27017/wa-scam-bot')
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('MongoDB connection error:', err));
+
+
+const messageSchema = new mongoose.Schema({
+    sender: String,
+    content: String,
+    timestamp: { type: Date, default: Date.now }
+});
+
+const MessageModel = mongoose.model('Message', messageSchema); 
+
+const WhitelistSchema = new mongoose.Schema({
+    phoneNumber: {type: String, required: true, unique: true},
+    note: String,
+    addedAt: { type: Date, default: Date.now }
+});
+
+const WhitelistModel = mongoose.model('Whitelist', WhitelistSchema);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -134,6 +157,36 @@ async function connectToWhatsApp() {
             broadcastLog('✅ Successfully connected to WhatsApp!');
             currentQR = '';
             updateState('connected');
+        }
+    });
+
+    sock.ev.on('messages.upsert', async (m) => {
+        const msg = m.messages[0];
+        if(!msg) return; // safety check
+
+        if (!msg.key.fromMe && m.type === 'notify') {
+            const text = msg.message?.conversation || msg.message?.extendedTextMessage?.text || '';
+            const sender = msg.key.remoteJid; 
+
+            if (text && sender) {
+                const isWhitelisted = await WhitelistModel.exists({ phoneNumber: sender });
+                if (!isWhitelisted) {
+
+                    broadcastLog(`📩 New message from ${sender}: ${text}`);
+                    broadcastLog(`🔍 ${sender} is not whitelisted`);
+                    try{
+                        await MessageModel.create({ sender, content: text });
+                        broadcastLog('💾 Message saved to database');
+
+                    } catch (dberr) {
+                        broadcastLog(`Error saving message to database: ${dberr}`);
+                    }
+                }
+                    else {
+                    broadcastLog(`✅ Message from ${sender} is whitelisted : ${text}`); 
+                    return; 
+                    }
+            }
         }
     });
 
