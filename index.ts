@@ -1,12 +1,12 @@
-import makeWASocket, { useMultiFileAuthState, DisconnectReason, Browsers, fetchLatestBaileysVersion } from '@whiskeysockets/baileys';
-import qrcodeTerminal from 'qrcode-terminal';
-import express from 'express';
-import { createServer } from 'http';
-import { Server } from 'socket.io';
-import QRCode from 'qrcode';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import fs from 'fs';
+import makeWASocket, { useMultiFileAuthState, DisconnectReason, Browsers, fetchLatestBaileysVersion } from '@whiskeysockets/baileys'; // The WA socket library
+import qrcodeTerminal from 'qrcode-terminal'; // Diaplay QR code in terminal
+import express from 'express'; // Web server for dashboard
+import { createServer } from 'http'; // Create HTTP server for Socket.IO  
+import { Server } from 'socket.io'; // Real-time communication with dashboard 
+import QRCode from 'qrcode'; // Generate QR code images for dashboard
+import path from 'path'; // Handle file paths
+import { fileURLToPath } from 'url'; // Get __dirname in ES modules
+import fs from 'fs'; // File system for session management 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,6 +15,9 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 const PORT = 3000;
+
+// Serve static files from src directory
+app.use('/src', express.static(path.join(__dirname, 'src')));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -94,8 +97,8 @@ async function connectToWhatsApp() {
 
         if (qr) {
             currentQR = qr;
-            broadcastLog('📱 Please scan this QR code with your WhatsApp from the web interface or terminal');
-            qrcodeTerminal.generate(qr, { small: true });
+            broadcastLog('📱 Please scan this QR code with your WhatsApp from the web interface ');
+            // qrcodeTerminal.generate(qr, { small: true });
             
             QRCode.toDataURL(qr, (err, url) => {
                 if (!err) io.emit('qr', url);

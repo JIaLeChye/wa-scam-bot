@@ -1,0 +1,137 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+h1 {
+    color: #128C7E;
+    margin-bottom: 20px;
+}
+
+#status {
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.status-disconnected { 
+    background-color: #ffebee; 
+    color: #c62828; 
+}
+
+.status-connecting { 
+    background-color: #e3f2fd; 
+    color: #1565c0; 
+}
+
+.status-connected { 
+    background-color: #e8f5e9; 
+    color: #2e7d32; 
+}
+
+/* Mode Toggle Styles */
+#mode-toggle {
+    display: none;
+    margin: 15px 0;
+}
+
+.mode-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.mode-btn.active {
+    background-color: #128C7E;
+    color: white;
+}
+
+.mode-btn.inactive {
+    background-color: #eee;
+    color: #333;
+}
+
+/* Pairing Container Styles */
+#pairing-container {
+    display: none;
+    margin: 20px 0;
+}
+
+#phone-number {
+    padding: 8px;
+    width: 70%;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#request-code-btn {
+    padding: 8px 15px;
+    background-color: #128C7E;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#pairing-code-display {
+    display: none;
+    margin-top: 15px;
+}
+
+#pairing-code {
+    letter-spacing: 5px;
+    font-family: monospace;
+    background: #e3f2fd;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* QR Container Styles */
+#qr-container {
+    display: none;
+    margin: 20px 0;
+    min-height: 256px;
+}
+
+.qr-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 256px;
+}
+
+#qrcode {
+    display: none;
+    max-width: 100%;
+}
+
+/* Logs Styles */
+#logs {
+    text-align: left;
+    font-size: 12px;
+    height: 100px;
+    overflow-y: auto;
+    background: #eee;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
