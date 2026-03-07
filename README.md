@@ -6,24 +6,25 @@
 [![License](https://img.shields.io/badge/License-Educational%20NonCommercial-yellow.svg)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/JIaLeChye/wa-scam-bot?style=social)](https://github.com/JIaLeChye/wa-scam-bot/stargazers)
 
-WA Scam Bot is a high-performance automated moderation tool designed to protect WhatsApp communities. By integrating the `@whiskeysockets/baileys` library with a real-time web dashboard, it proactively identifies, flags, and removes malicious scam links to keep your groups safe.
+> 📢 **Updates:** View the full project history in [CHANGELOG.md](CHANGELOG.md).
+
+WA Scam Bot is a moderation tool for WhatsApp groups. It connects to WhatsApp using the `@whiskeysockets/baileys` library and provides a web dashboard to monitor messages. This bot logs messages from unknown senders to a database for review.
+
+## 📋 Current Features
+
+- **Web Dashboard**: View connection status and logs in real-time via a web interface.
+- **Authentication**: Connect using QR Code scan or Phone Number Pairing Code.
+- **Message Logging**: Automatically saves messages from non-whitelisted numbers to MongoDB.
+- **Whitelist System**: Trusted numbers can bypass message logging.
+- **Session Management**: Automatically attempts to reconnect if the connection is lost.
 
 ## 🗺️ Project Roadmap
 
-Our mission is to create a "set-and-forget" security layer for WhatsApp group admins.
-
-- [x] Real-time Web Dashboard: Monitor logs and status via a browser.
-- [x] Hybrid Authentication: Support for both QR Scanning and 8-digit Pairing Codes.
-- [ ] AI Scam Detection: (In Progress) Using pattern matching to identify phishing URLs.
-- [ ] Global Blacklist: Integration with a shared database of reported scammer numbers.
-- [ ] Gatekeeper Mode: Mandatory "Human Verification" for all new group members.
-
-## ✨ Key Features
-
-- **Zero-Crash Recovery**: Automatically handles session corruption and re-authentication without manual intervention.
-- **Admin Automation**: Capability to instantly kick bad actors and delete offending messages.
-- **Cross-Platform Dashboard**: Built with Socket.IO for lightning-fast, no-refresh updates.
-- **Pairing Code Support**: Link your bot using just a phone number—perfect for remote server deployments where scanning a QR is difficult.
+- [x] Web Dashboard for logs and pairing.
+- [x] QR Code and Pairing Code login support.
+- [ ] AI-based Pattern Matching for Scam URLs.
+- [ ] Shared Database for Global Blacklisting.
+- [ ] New Member Verification (Gatekeeper Mode).
 
 ## ⚙️ Installation & Setup
 
@@ -41,7 +42,7 @@ npm install
 ### 2. Launch the Bot
 ```bash
 # Using tsx for fast TypeScript execution
-npx tsx index.ts
+npx tsx src/index.ts
 ```
 
 ### 3. Connect Your Account
@@ -56,17 +57,6 @@ Navigate to `http://localhost:3000` and choose your preferred method:
 - [Express](https://expressjs.com/) - Robust web framework for the backend API.
 - [Socket.IO](https://socket.io/) - Real-time, bidirectional event-based communication.
 - [TypeScript](https://www.typescriptlang.org/) - Ensuring type safety and maintainable code.
-
-## 🤝 Contributing
-
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
 
 ## ⚠️ Disclaimer
 
