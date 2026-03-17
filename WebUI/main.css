@@ -1,21 +1,68 @@
+:root {
+    --bg: #f0f2f5;
+    --panel: #ffffff;
+    --text: #1a1a1a;
+    --text-muted: #555;
+    --border: #ccc;
+    --input-bg: #ffffff;
+    --log-bg: #eeeeee;
+    --log-text: #333;
+    --btn-inactive-bg: #eeeeee;
+    --btn-inactive-text: #333;
+    --pairing-code-bg: #e3f2fd;
+}
+
+body.dark {
+    --bg: #1a1a2e;
+    --panel: #16213e;
+    --text: #e0e0e0;
+    --text-muted: #aaa;
+    --border: #444;
+    --input-bg: #0f3460;
+    --log-bg: #0f3460;
+    --log-text: #cdd;
+    --btn-inactive-bg: #0f3460;
+    --btn-inactive-text: #ccc;
+    --pairing-code-bg: #0f3460;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5;
+    background-color: var(--bg);
+    color: var(--text);
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#theme-toggle {
+    position: fixed;
+    top: 14px;
+    right: 16px;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--panel);
+    color: var(--text);
+    font-size: 13px;
+    cursor: pointer;
+    z-index: 999;
+    transition: background 0.3s, color 0.3s;
 }
 
 .container {
-    background-color: white;
+    background-color: var(--panel);
+    color: var(--text);
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
     text-align: center;
     max-width: 400px;
     width: 100%;
+    transition: background-color 0.3s;
 }
 
 h1 {
@@ -65,8 +112,8 @@ h1 {
 }
 
 .mode-btn.inactive {
-    background-color: #eee;
-    color: #333;
+    background-color: var(--btn-inactive-bg);
+    color: var(--btn-inactive-text);
 }
 
 /* Pairing Container Styles */
@@ -79,8 +126,10 @@ h1 {
     padding: 8px;
     width: 70%;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border);
     border-radius: 4px;
+    background: var(--input-bg);
+    color: var(--text);
 }
 
 #request-code-btn {
@@ -100,7 +149,8 @@ h1 {
 #pairing-code {
     letter-spacing: 5px;
     font-family: monospace;
-    background: #e3f2fd;
+    background: var(--pairing-code-bg);
+    color: var(--text);
     padding: 10px;
     border-radius: 5px;
 }
@@ -130,8 +180,10 @@ h1 {
     font-size: 12px;
     height: 100px;
     overflow-y: auto;
-    background: #eee;
+    background: var(--log-bg);
+    color: var(--log-text);
     padding: 10px;
     border-radius: 5px;
     margin-top: 15px;
+    transition: background-color 0.3s;
 }

@@ -8,20 +8,26 @@
 
 > 📢 **Updates:** View the full project history in [CHANGELOG.md](CHANGELOG.md).
 
-WA Scam Bot is a moderation tool for WhatsApp groups. It connects to WhatsApp using the `@whiskeysockets/baileys` library and provides a web dashboard to monitor messages. This bot logs messages from unknown senders to a database for review.
+WA Scam Bot is a moderation tool for WhatsApp groups. It connects to WhatsApp using the `@whiskeysockets/baileys` library, monitors incoming messages for scam patterns, and provides a real-time web dashboard to track activity.
 
 ## 📋 Current Features
 
-- **Web Dashboard**: View connection status and logs in real-time via a web interface.
+- **Web Dashboard**: View connection status and real-time logs in a browser, with dark/light mode support.
 - **Authentication**: Connect using QR Code scan or Phone Number Pairing Code.
-- **Message Logging**: Automatically saves messages from non-whitelisted numbers to MongoDB.
-- **Whitelist System**: Trusted numbers can bypass message logging.
+- **Scam Detection**: Keyword and URL-based detection on incoming messages with a risk score.
+- **Database-Driven Keywords**: Scam keywords are stored and managed in MongoDB — no code edits needed to update them.
+- **Scam URL Tracking**: Detected URLs are stored and tracked with hit counts and sender history.
+- **Message Logging**: Saves messages from non-whitelisted senders to MongoDB for review.
+- **Whitelist System**: Trusted numbers bypass message logging and scam detection.
 - **Session Management**: Automatically attempts to reconnect if the connection is lost.
+- **DB Error Page**: Shows a maintenance page if MongoDB is unreachable at startup instead of crashing.
 
 ## 🗺️ Project Roadmap
 
 - [x] Web Dashboard for logs and pairing.
 - [x] QR Code and Pairing Code login support.
+- [x] Keyword and URL-based scam detection.
+- [x] Database-driven keyword and scam URL management.
 - [ ] AI-based Pattern Matching for Scam URLs.
 - [ ] Shared Database for Global Blacklisting.
 - [ ] New Member Verification (Gatekeeper Mode).
@@ -31,6 +37,7 @@ WA Scam Bot is a moderation tool for WhatsApp groups. It connects to WhatsApp us
 ### Prerequisites
 - **Node.js**: v20.x or higher (LTS recommended)
 - **npm**: v10.x or higher
+- **MongoDB**: Running locally or via a remote URI
 
 ### 1. Clone & Install
 ```bash
@@ -39,24 +46,38 @@ cd wa-scam-bot
 npm install
 ```
 
-### 2. Launch the Bot
+### 2. Configure Environment
+Create a `.env` file in the `src/` directory based on the example below. **Never commit this file.**
+```
+PORT=your_port_number
+MongoDB_URI=your_mongodb_connection_string
+KEYWORD_CACHE_TTL_MS=60000
+```
+
+### 3. Launch the Bot
 ```bash
-# Using tsx for fast TypeScript execution
 npx tsx src/index.ts
 ```
 
-### 3. Connect Your Account
+### 4. Connect Your Account
 Navigate to `http://localhost:3000` and choose your preferred method:
 
 - **Option A**: Request a Pairing Code by entering your phone number (with country code).
 - **Option B**: Scan the dynamic QR Code displayed on the dashboard.
 
+### 5. Add Scam Keywords
+Insert keywords into the `scamkeywords` MongoDB collection to start detection:
+```js
+db.scamkeywords.insertOne({ keyword: "free money", isActive: true })
+```
+
 ## 🧰 Built With
 
-- [Baileys](https://github.com/WhiskeySockets/Baileys) - The industry-standard WhatsApp Web API.
-- [Express](https://expressjs.com/) - Robust web framework for the backend API.
-- [Socket.IO](https://socket.io/) - Real-time, bidirectional event-based communication.
-- [TypeScript](https://www.typescriptlang.org/) - Ensuring type safety and maintainable code.
+- [Baileys](https://github.com/WhiskeySockets/Baileys) - WhatsApp Web API library.
+- [Express](https://expressjs.com/) - Web framework for the backend.
+- [Socket.IO](https://socket.io/) - Real-time dashboard communication.
+- [MongoDB + Mongoose](https://mongoosejs.com/) - Database for messages, keywords, and scam logs.
+- [TypeScript](https://www.typescriptlang.org/) - Type-safe codebase.
 
 ## ⚠️ Disclaimer
 

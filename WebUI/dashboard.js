@@ -1,6 +1,25 @@
 // Initialize Socket.IO connection
 const socket = io();
 
+// --- Dark Mode Toggle ---
+const themeToggleBtn = document.getElementById('theme-toggle');
+
+function applyTheme(isDark) {
+    document.body.classList.toggle('dark', isDark);
+    themeToggleBtn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// Restore preference from localStorage
+const savedTheme = localStorage.getItem('theme');
+applyTheme(savedTheme === 'dark');
+
+themeToggleBtn.addEventListener('click', () => {
+    const isDark = !document.body.classList.contains('dark');
+    applyTheme(isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+});
+// --- End Dark Mode Toggle ---
+
 // DOM Elements
 const statusEl = document.getElementById('status');
 const qrImg = document.getElementById('qrcode');
