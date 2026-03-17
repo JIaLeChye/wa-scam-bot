@@ -4,6 +4,7 @@ import { Server } from 'socket.io'; // Real-time communication with dashboard
 import path from 'path'; // Handle file paths
 import { fileURLToPath } from 'url'; // Get __dirname in ES modules
 import 'dotenv/config'; // Load environment variables from .env file 
+import rateLimit from 'express-rate-limit';
 import { connectDB } from './db.js'; // MongoDB connection
 import { startWhatsappBot } from './bot.js'; // WhatsApp bot logic
 
@@ -19,6 +20,15 @@ const PORT = Number(process.env.PORT) || 3000;
 const webUiPath = path.join(__dirname, '../WebUI');
 const dbErrorPagePath = path.join(webUiPath, 'db-error.html');
 let isDbConnected = false;
+
+const limiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 60,
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
+app.use(limiter);
 
 app.use((req, res, next) => {
     if (isDbConnected) {
@@ -59,8 +69,3 @@ async function initializeServices() {
 }
 
 initializeServices();
-
-
-io.on('connection', (socket) => {
-    console.log('User connected to dashboard');
-});

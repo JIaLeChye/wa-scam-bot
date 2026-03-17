@@ -1,15 +1,4 @@
 import mongoose from 'mongoose'; // MongoDB for logging and analytics
-import dotenv from 'dotenv'; 
-import { fileURLToPath } from 'url'; // Get __dirname in ES modules
-import path from 'path'; // Handle file paths
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const envPath = path.join(__dirname, '.env'); 
-dotenv.config({path : envPath}); 
-
-
-console.log(process.env ? 'Environment variables loaded successfully' : 'Failed to load environment variables');
 
 const MongoDB_URI = process.env.MongoDB_URI || process.env.MONGODB_URI;
 let connectPromise: Promise<typeof mongoose> | null = null;
@@ -34,11 +23,11 @@ const connectDB = async () => {
             serverSelectionTimeoutMS: 5000,
             socketTimeoutMS: 45000
         })
-        .then((conn) => {
+        .then((conn: typeof mongoose) => {
             console.log('Connected to MongoDB');
             return conn;
         })
-        .catch((err) => {
+        .catch((err: unknown) => {
             connectPromise = null;
             console.error('MongoDB connection error:', err);
             throw err;

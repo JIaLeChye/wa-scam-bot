@@ -33,22 +33,22 @@ async function startWhatsappBot(io: any) {
 
 
 
-    socket.on("request_paring_code", async(phoneNumber: string) => {
+    socket.on("request_pairing_code", async(phoneNumber: string) => {
         if(waSocket){
 
             try{
-                broadcastLog(`🔍 Requesting Paring Code for ${phoneNumber}`);
+                broadcastLog(`🔍 Requesting Pairing Code for ${phoneNumber}`);
                 const code = await waSocket.requestPairingCode(phoneNumber);
-                socket.emit('paring_code', code );  
-                broadcastLog(`✅ Paring code for ${phoneNumber} sent to dashboard`);
+                socket.emit('pairing_code', code );  
+                broadcastLog(`✅ Pairing code for ${phoneNumber} sent to dashboard`);
             
 
             } catch(err:any){
-                broadcastLog(`Error requesting paring code for ${phoneNumber}: ${err.message || err}`);
+                broadcastLog(`Error requesting pairing code for ${phoneNumber}: ${err.message || err}`);
             }
         }
         else {
-            broadcastLog('⚠️ Cannot request paring code: WhatsApp socket not initialized');
+            broadcastLog('⚠️ Cannot request pairing code: WhatsApp socket not initialized');
         }
 
     }); 

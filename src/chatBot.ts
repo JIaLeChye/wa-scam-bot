@@ -81,8 +81,12 @@ function buildKeywordMatcher(keywords: string[]): RegExp | null {
 
 async function refreshKeywordCache(): Promise<string[]> {
 	const records = await ScamKeywordModel.find({ isActive: true }).select({ keyword: 1, _id: 0 }).lean<Array<{ keyword?: string }>>();
-	const keywords = Array.from(
-		new Set(records.map((item) => String(item.keyword || '').toLowerCase().trim()).filter(Boolean))
+	const keywords: string[] = Array.from(
+		new Set(
+			records
+				.map((item: { keyword?: string }) => String(item.keyword ?? '').toLowerCase().trim())
+				.filter((k): k is string => k.length > 0)
+		)
 	);
 	keywordCache.keywords = keywords;
 	keywordCache.matcher = buildKeywordMatcher(keywords);
@@ -128,20 +132,23 @@ async function updateMatchedKeywordStats(matchedKeywords: string[]): Promise<voi
 async function upsertScamUrls(urls: string[], sender: string, content: string): Promise<void> {
 	if (!urls.length) return;
 
-	for (const rawUrl of urls) {
-		const url = normalizeUrl(rawUrl);
-		if (!url) continue;
-		await ScamUrlModel.updateOne(
-			{ url },
-			{
-				$setOnInsert: { firstSeenAt: new Date() },
-				$set: { lastSeenAt: new Date(), lastMessageSample: content, updatedAt: new Date() },
-				$inc: { hitCount: 1 },
-				$addToSet: { senderSamples: sender }
-			},
-			{ upsert: true }
+	const ops = urls
+		.map((rawUrl) => normalizeUrl(rawUrl))
+		.filter((url): url is string => url.length > 0)
+		.map((url) =>
+			ScamUrlModel.updateOne(
+				{ url },
+				{
+					$setOnInsert: { firstSeenAt: new Date() },
+					$set: { lastSeenAt: new Date(), lastMessageSample: content, updatedAt: new Date() },
+					$inc: { hitCount: 1 },
+					$addToSet: { senderSamples: sender }
+				},
+				{ upsert: true }
+			)
 		);
-	}
+
+	await Promise.all(ops);
 }
 
 async function detectScamContent(content: string): Promise<ScamDetectionResult> {
