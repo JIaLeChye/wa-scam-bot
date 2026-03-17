@@ -2,6 +2,7 @@ import makeWASocket, { useMultiFileAuthState, DisconnectReason, Browsers, fetchL
 import QRCode from 'qrcode';
 import fs from 'fs'; // File system for session management
 import { MessageModel, WhitelistModel } from './db.js';
+import { detectAndRecordScam } from './chatBot.js';
 
 let waSocket: any = null;
 let currentState = 'disconnected';
@@ -32,27 +33,25 @@ async function startWhatsappBot(io: any) {
 
 
 
-    socket.on("request_paring_code", async(phoneNumber: string) => {
+    socket.on("request_pairing_code", async(phoneNumber: string) => {
         if(waSocket){
 
             try{
-                broadcastLog(`🔍 Requesting Paring Code for ${phoneNumber}`);
+                broadcastLog(`🔍 Requesting Pairing Code for ${phoneNumber}`);
                 const code = await waSocket.requestPairingCode(phoneNumber);
-                socket.emit('paring_code', code );  
-                broadcastLog(`✅ Paring code for ${phoneNumber} sent to dashboard`);
+                socket.emit('pairing_code', code );  
+                broadcastLog(`✅ Pairing code for ${phoneNumber} sent to dashboard`);
             
 
             } catch(err:any){
-                broadcastLog(`Error requesting paring code for ${phoneNumber}: ${err.message || err}`);
+                broadcastLog(`Error requesting pairing code for ${phoneNumber}: ${err.message || err}`);
             }
         }
         else {
-            broadcastLog('⚠️ Cannot request paring code: WhatsApp socket not initialized');
+            broadcastLog('⚠️ Cannot request pairing code: WhatsApp socket not initialized');
         }
 
     }); 
-
-
     });
 
     async function connectToWhatsApp() {
@@ -140,6 +139,18 @@ async function startWhatsappBot(io: any) {
                         try{
                             await MessageModel.create({ sender, content: text });
                             broadcastLog('💾 Message saved to database');
+
+                            const scamResult = await detectAndRecordScam(sender, text);
+                            if (scamResult.isSuspected) {
+                                broadcastLog(`🚨 Scam suspected from ${sender}. URLs: ${scamResult.detectedUrls.join(', ') || 'none'}`);
+                                io.emit('scam_alert', {
+                                    sender,
+                                    content: text,
+                                    riskScore: scamResult.riskScore,
+                                    matchedKeywords: scamResult.matchedKeywords,
+                                    detectedUrls: scamResult.detectedUrls
+                                });
+                            }
 
                         } catch (dberr) {
                             broadcastLog(`Error saving message to database: ${dberr}`);
