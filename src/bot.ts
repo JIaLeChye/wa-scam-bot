@@ -2,6 +2,7 @@ import makeWASocket, { useMultiFileAuthState, DisconnectReason, Browsers, fetchL
 import QRCode from 'qrcode';
 import fs from 'fs'; // File system for session management
 import { MessageModel, WhitelistModel } from './db.js';
+import { detectAndRecordScam } from './chatBot.js';
 
 let waSocket: any = null;
 let currentState = 'disconnected';
@@ -51,8 +52,6 @@ async function startWhatsappBot(io: any) {
         }
 
     }); 
-
-
     });
 
     async function connectToWhatsApp() {
@@ -140,6 +139,18 @@ async function startWhatsappBot(io: any) {
                         try{
                             await MessageModel.create({ sender, content: text });
                             broadcastLog('💾 Message saved to database');
+
+                            const scamResult = await detectAndRecordScam(sender, text);
+                            if (scamResult.isSuspected) {
+                                broadcastLog(`🚨 Scam suspected from ${sender}. URLs: ${scamResult.detectedUrls.join(', ') || 'none'}`);
+                                io.emit('scam_alert', {
+                                    sender,
+                                    content: text,
+                                    riskScore: scamResult.riskScore,
+                                    matchedKeywords: scamResult.matchedKeywords,
+                                    detectedUrls: scamResult.detectedUrls
+                                });
+                            }
 
                         } catch (dberr) {
                             broadcastLog(`Error saving message to database: ${dberr}`);

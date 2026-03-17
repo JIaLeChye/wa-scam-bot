@@ -4,8 +4,8 @@ import { Server } from 'socket.io'; // Real-time communication with dashboard
 import path from 'path'; // Handle file paths
 import { fileURLToPath } from 'url'; // Get __dirname in ES modules
 import 'dotenv/config'; // Load environment variables from .env file 
-import { connectDB, MessageModel, WhitelistModel } from './db.js'; // MongoDB connection and models
-import { startWhatsappBot, waSocket } from './bot.js'; // WhatsApp bot logic
+import { connectDB } from './db.js'; // MongoDB connection
+import { startWhatsappBot } from './bot.js'; // WhatsApp bot logic
 
 
 
@@ -15,13 +15,30 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
+const webUiPath = path.join(__dirname, '../WebUI');
+const dbErrorPagePath = path.join(webUiPath, 'db-error.html');
+let isDbConnected = false;
 
-// Serve static files from src directory
-app.use(express.static(path.join(__dirname, '../WebUI')));
+app.use((req, res, next) => {
+    if (isDbConnected) {
+        next();
+        return;
+    }
+
+    if (req.method === 'GET' && !req.path.startsWith('/socket.io')) {
+        res.status(503).sendFile(dbErrorPagePath);
+        return;
+    }
+
+    res.status(503).json({ error: 'Database unavailable' });
+});
+
+// Serve static files from WebUI directory
+app.use(express.static(webUiPath));
 
 app.get('/WebUI', (req, res) => {
-    res.sendFile(path.join(__dirname, '../WebUI/index.html'));
+    res.sendFile(path.join(webUiPath, 'index.html'));
 });
 
 // Serve the dashboard
@@ -30,12 +47,20 @@ server.listen(PORT, () => {
     console.log(`📊 Access the dashboard at http://localhost:${PORT}`);
 });
 
+async function initializeServices() {
+    try {
+        await connectDB();
+        isDbConnected = true;
+        startWhatsappBot(io); // Start only when DB is ready
+    } catch (error: any) {
+        console.error(`❌ Database unavailable at startup: ${error?.message || error}`);
+        console.error(`⚠️ Serving maintenance page until database is back online.`);
+    }
+}
 
-connectDB(); // Connect to MongoDB before starting the WhatsApp connection
+initializeServices();
 
 
 io.on('connection', (socket) => {
     console.log('User connected to dashboard');
 });
-
-startWhatsappBot(io); // Start the WhatsApp bot and pass the Socket.IO instance for real-time updates

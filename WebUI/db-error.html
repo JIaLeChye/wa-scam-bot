@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>503 Service Unavailable</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f4f6f8;
+            --panel: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --danger: #dc2626;
+            --ring: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            background: radial-gradient(circle at top, #ffffff, var(--bg));
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            padding: 24px;
+        }
+
+        .card {
+            width: min(680px, 100%);
+            background: var(--panel);
+            border: 1px solid var(--ring);
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        .code {
+            font-size: 64px;
+            font-weight: 800;
+            color: var(--danger);
+            letter-spacing: 1px;
+            margin: 0 0 8px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0 0 10px;
+        }
+
+        p {
+            margin: 0 0 14px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .pill {
+            display: inline-block;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            background: #fef2f2;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <p class="code">503</p>
+        <h1>Database Connection Error</h1>
+        <p>The dashboard is temporarily unavailable because the application cannot connect to MongoDB.</p>
+        <p>Please verify your database service and environment configuration, then refresh this page.</p>
+        <span class="pill">Service status: Database unavailable</span>
+    </main>
+</body>
+</html>
